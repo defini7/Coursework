@@ -26,6 +26,8 @@ Main::Main() : QMainWindow(nullptr)
     m_GfxSceneView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_GfxSceneView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    m_GfxSceneView->setFocusPolicy(Qt::NoFocus);
+
     QVBoxLayout* layout = new QVBoxLayout(central);
     QHBoxLayout* labelLayout = new QHBoxLayout(central);
 
@@ -124,4 +126,35 @@ void Main::resizeEvent(QResizeEvent* event)
             m_GfxScene->Construct(m_GfxSceneView->width(), m_GfxSceneView->height());
         });
     }
+}
+
+void Main::keyPressEvent(QKeyEvent* event)
+{
+    auto UpdateModel = [&](int offset)
+    {
+        int model = UserContext::Get().Get("model").toInt() + offset;
+        if (model < 1) model = 2;
+        if (model > 2) model = 1;
+        UserContext::Get().Set("model", model);
+
+        Well::Model m = static_cast<Well::Model>(model);
+
+        SetModel(m);
+        emit OnModelChange(m);
+    };
+
+    switch (event->key())
+    {
+    case Qt::Key_Left: UpdateModel(-1); break;
+    case Qt::Key_Right: UpdateModel(1); break;
+    case Qt::Key_P:
+    {
+        if (event->modifiers() & Qt::Modifier::CTRL)
+            m_GfxScene->Pause();
+    }
+    break;
+
+    }
+
+    QMainWindow::keyPressEvent(event);
 }

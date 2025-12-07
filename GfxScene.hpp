@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneEvent>
+#include <QKeyEvent>
 
 class GfxScene : public QGraphicsScene
 {
@@ -14,6 +15,9 @@ public:
 
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent*) override;
+
+public slots:
+    void Pause();
 
 private slots:
     void Update();
@@ -33,4 +37,7 @@ private:
 
     static constexpr int s_BubbleCount = 20;
     static constexpr double s_BubbleRadius = 12;
+
+    bool m_Paused = false;
+
 };

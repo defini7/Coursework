@@ -30,7 +30,8 @@ signals:
     void OnContextMenuRequested(const QPoint&);
 
 private:
-    void resizeEvent(QResizeEvent* event) override;
+    void resizeEvent(QResizeEvent*) override;
+    void keyPressEvent(QKeyEvent*) override;
 
 private:
     QLabel* m_NameLabel;

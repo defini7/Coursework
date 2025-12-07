@@ -190,6 +190,9 @@ void GfxScene::Update()
 {
     static double time = 0.0;
 
+    if (m_Paused)
+        return;
+
     bool validModel;
     int model = UserContext::Get().Get("model").toInt(&validModel);
 
@@ -245,4 +248,9 @@ void GfxScene::mousePressEvent(QGraphicsSceneMouseEvent* evt)
     }
 
     QGraphicsScene::mousePressEvent(evt);
+}
+
+void GfxScene::Pause()
+{
+    m_Paused = !m_Paused;
 }

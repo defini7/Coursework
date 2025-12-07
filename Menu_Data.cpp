@@ -12,6 +12,10 @@ namespace Menu
         QAction* fileAct = addAction("Загрузить с файла");
         QAction* saveAct = addAction("Сохранить в файл");
 
+        rawAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
+        fileAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
+        saveAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
+
         QObject::connect(rawAct, &QAction::triggered, [this]()
         {
             emit OnLoadModeSelected(DataLoadMode::Raw);
