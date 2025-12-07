@@ -3,17 +3,17 @@
 
 UserNameDialog::UserNameDialog(QWidget* parent) : QDialog(parent)
 {
-    setWindowTitle("Username");
+    setWindowTitle("Имя пользователя");
     resize(100, 70);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
 
-    m_NameLabel = new QLabel("Enter username: ", this);
+    m_NameLabel = new QLabel("Введите имя пользователя: ", this);
 
     m_NameEdit = new QLineEdit(this);
-    m_NameEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[A-Za-z]*")));
+    m_NameEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[A-Za-zА-Яа-я0-9]*")));
 
-    m_SubmitButton = new QPushButton("Ok", this);
+    m_SubmitButton = new QPushButton("Подтвердить", this);
 
     layout->addWidget(m_NameLabel);
     layout->addWidget(m_NameEdit);

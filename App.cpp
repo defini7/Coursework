@@ -1,5 +1,6 @@
 #include "Main.hpp"
-#include "DataLoader.hpp"
+#include "DataManager.hpp"
+#include "UserContext.hpp"
 
 #include <QApplication>
 
@@ -8,10 +9,18 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
 
     Main window;
-    DataLoader dataLoader;
+    DataManager dataManager;
 
-    QObject::connect(&window, &Main::OnLoadModeSelected, &dataLoader, &DataLoader::LoadData);
-    QObject::connect(&window, &Main::OnModelChange, &dataLoader, &DataLoader::UpdateModel);
+    UserContext::Get().Set("model", static_cast<int>(Well::Model::None));
+
+    QObject::connect(&window, &Main::OnLoadModeSelected, &dataManager, &DataManager::LoadData);
+    QObject::connect(&window, &Main::OnSaveSelected, &dataManager, &DataManager::SaveData);
+    QObject::connect(&window, &Main::OnModelChange, &dataManager, &DataManager::UpdateModel);
+    QObject::connect(&window, &Main::OnContextMenuRequested, &dataManager, &DataManager::SendWellData);
+
+    QObject::connect(&dataManager, &DataManager::OnUpdateModel, &window, &Main::SetModel);
+    QObject::connect(&dataManager, &DataManager::OnUpdateUsername, &window, &Main::SetName);
+    QObject::connect(&dataManager, &DataManager::OnWellDataRequest, &window, &Main::CreateContextMenu);
 
     window.show();
 

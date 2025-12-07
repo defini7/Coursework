@@ -5,10 +5,10 @@ namespace Menu
 {
     Model::Model(QWidget* parent) : QMenu(parent)
     {
-        setTitle("Model");
+        setTitle("Режим");
 
-        QAction* gasAct = addAction("Gas");
-        QAction* condAct = addAction("Condensate");
+        QAction* gasAct = addAction("Газовая");
+        QAction* condAct = addAction("Газоконденсатная");
 
         QObject::connect(gasAct, &QAction::triggered, [&]()
         {

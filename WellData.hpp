@@ -31,30 +31,22 @@ namespace Well
     // Here we don't take into account Model::None
     inline const QList<QString> g_ParamHeaders[g_ModelCount] =
     {
-        { "Bottom pressure", "Wellhead temperature", "Gas flow",
-        "Depth", "Permeability", "Porosity" },
+        { "Давление забоя, МПа", "Устьевая температура, °С", "Расход газа, тыс. м³/сут",
+        "Глубина, м", "Проницаемость пласта", "Пористость пласта" },
 
-        { "Bottom pressure", "Wellhead temperature", "Gas flow",
-        "Condensate content", "Depth", "Permeability",
-        "Porosity", "Viscosity", "Density" }
+        { "Давление забоя, МПа", "Устьевая температура, °С", "Расход газа, тыс. м³/сут",
+        "Содержание конденсата, кг/м³", "Глубина, м", "Проницаемость пласта",
+        "Пористость пласта", "Вязкость конденсата", "Плотность конденсата" }
     };
 
-    class Data : QObject
+    inline const QList<QString>& GetParams(Model model)
     {
-        Q_OBJECT
+        return g_ParamHeaders[static_cast<int>(model) - 1];
+    }
 
-    public:
-        Data();
-
-        const QVector<Record>& GetRecords() const;
-
-    public slots:
-        void AddRecord(const Record&);
-        void UpdateModel(Model);
-
-    private:
-        QVector<Record> m_Records;
-        Model m_Model;
-
+    struct Data
+    {
+        QVector<Record> records;
+        Model model = Model::None;
     };
 }

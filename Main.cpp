@@ -4,7 +4,7 @@
 
 Main::Main() : QMainWindow(nullptr)
 {
-    setWindowTitle("Coursework");
+    setWindowTitle("Курсовая работа");
     resize(800, 600);
 
     QWidget* central = new QWidget(this);
@@ -12,16 +12,19 @@ Main::Main() : QMainWindow(nullptr)
     m_NameLabel = new QLabel();
     m_ModelLabel = new QLabel();
 
-    m_GfxScene = new QGraphicsScene(0, 0, 800, 600, central);
-    m_GfxSceneView = new QGraphicsView(m_GfxScene, central);
+    m_GfxSceneView = new QGraphicsView(central);
+    m_GfxScene = new GfxScene(m_GfxSceneView);
 
-    m_GfxSceneView->fitInView(m_GfxScene->sceneRect(), Qt::KeepAspectRatio);
+    m_GfxSceneView->setScene(m_GfxScene);
 
-    // TODO: Remove it
-    m_GfxScene->setForegroundBrush(QColor(255, 255, 255, 127));
+    m_GfxScene->Construct(m_GfxSceneView->width(), m_GfxSceneView->height());
 
     SetName("-");
     SetModel(Well::Model::None);
+
+    m_GfxSceneView->setRenderHint(QPainter::Antialiasing, true);
+    m_GfxSceneView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_GfxSceneView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     QVBoxLayout* layout = new QVBoxLayout(central);
     QHBoxLayout* labelLayout = new QHBoxLayout(central);
@@ -42,25 +45,38 @@ Main::Main() : QMainWindow(nullptr)
     menuBar()->addMenu(m_DataMenu);
 
     QObject::connect(m_ModelMenu, &Menu::Model::OnModelChange, this, [this](Well::Model model)
-    {
-        SetModel(model);
-        emit OnModelChange(model);
-    });
+        {
+            SetModel(model);
+            emit OnModelChange(model);
+        });
 
     QObject::connect(m_DataMenu, &Menu::Data::OnLoadModeSelected, this, [this](Menu::DataLoadMode mode)
-    {
-        emit OnLoadModeSelected(mode);
-    });
+        {
+            emit OnLoadModeSelected(mode);
+        });
+
+    QObject::connect(m_DataMenu, &Menu::Data::OnSaveSelected, this, [this](const QString& fileName)
+        {
+            emit OnSaveSelected(fileName);
+        });
 
     QTimer::singleShot(0, this, [this]()
-    {
-        UserNameDialog* userNameDialog = new UserNameDialog(this);
+        {
+           UserNameDialog userNameDialog(this);
 
-        if (userNameDialog->exec() == QDialog::Accepted)
-            SetName(UserContext::Get().Get("name").toString());
+           if (userNameDialog.exec() == QDialog::Accepted)
+               SetName(UserContext::Get().Get("name").toString());
 
-        delete userNameDialog;
-    });
+           userNameDialog.close();
+        });
+
+    m_GfxSceneView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(m_GfxSceneView, &QGraphicsView::customContextMenuRequested,
+        this, [this](const QPoint& pos)
+        {
+            emit OnContextMenuRequested(m_GfxSceneView->mapToGlobal(pos));
+        });
 }
 
 Main::~Main()
@@ -70,7 +86,7 @@ Main::~Main()
 
 void Main::SetName(const QString& text)
 {
-    m_NameLabel->setText("Name: " + text);
+    m_NameLabel->setText("Имя пользователя: " + text);
 }
 
 void Main::SetModel(Well::Model model)
@@ -79,10 +95,33 @@ void Main::SetModel(Well::Model model)
 
     switch (model)
     {
-    case Well::Model::Gas: strModel = "gas"; break;
-    case Well::Model::Condensate: strModel = "condensate"; break;
+    case Well::Model::Gas: strModel = "газовая"; break;
+    case Well::Model::Condensate: strModel = "газоконденсатная"; break;
     case Well::Model::None: strModel = "-"; break;
     }
 
-    m_ModelLabel->setText("Model: " + strModel);
+    m_ModelLabel->setText("Режим: " + strModel);
+}
+
+void Main::CreateContextMenu(const Well::Data& data, const QPoint& menuPos)
+{
+    QMenu menu(this);
+
+    for (const auto& param : Well::GetParams(data.model))
+        menu.addAction(param)->setEnabled(false);
+
+    menu.exec(menuPos);
+}
+
+void Main::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+
+    if (m_GfxScene && m_GfxSceneView)
+    {
+        QTimer::singleShot(10, this, [this]()
+        {
+            m_GfxScene->Construct(m_GfxSceneView->width(), m_GfxSceneView->height());
+        });
+    }
 }

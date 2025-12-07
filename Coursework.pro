@@ -1,4 +1,4 @@
-QT       += core gui widgets
+QT       += core gui widgets printsupport
 
 CONFIG += c++20
 
@@ -8,18 +8,21 @@ CONFIG += c++20
 
 SOURCES += \
     App.cpp \
-    DataLoader.cpp \
+    Correlation.cpp \
+    DataManager.cpp \
     Dialog_Params.cpp \
+    GfxScene.cpp \
     Main.cpp \
     Menu_Data.cpp \
     Menu_Model.cpp \
     UserContext.cpp \
-    UserNameDialog.cpp \
-    WellData.cpp
+    UserNameDialog.cpp
 
 HEADERS += \
-    DataLoader.hpp \
+    Correlation.hpp \
+    DataManager.hpp \
     Dialog_Params.hpp \
+    GfxScene.hpp \
     Main.hpp \
     Menu_Data.hpp \
     Menu_Model.hpp \

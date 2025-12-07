@@ -14,15 +14,20 @@ namespace Dialog
         Params();
 
         void UpdateModel(Well::Model model);
+        void SetWellData(Well::Data& wellData);
 
         void showEvent(QShowEvent* event) override;
+        void hideEvent(QHideEvent* event) override;
 
     private:
-        Well::Model m_Model = Well::Model::None;
+        void UpdateSize();
 
+    private:
         QTableWidget* m_Table;
         QPushButton* m_SubmitButton;
-        QPushButton* m_AddRawButton;
+        QPushButton* m_AddRowButton;
+
+        Well::Data* m_Data;
 
     };
 }

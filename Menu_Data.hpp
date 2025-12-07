@@ -19,6 +19,7 @@ namespace Menu
 
     signals:
         void OnLoadModeSelected(DataLoadMode);
+        void OnSaveSelected(const QString&);
 
     };
 }
