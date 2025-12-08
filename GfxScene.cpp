@@ -244,6 +244,8 @@ void GfxScene::mousePressEvent(QGraphicsSceneMouseEvent* evt)
                 pos.setY(height());
                 m_BubbleSpeeds[i] = 1.0 + QRandomGenerator::global()->bounded(1.0);
             }
+
+            i++;
         }
     }
 

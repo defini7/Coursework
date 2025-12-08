@@ -8,12 +8,12 @@ UserContext& UserContext::Get()
 
 UserContext::UserContext() : m_Data("Well", "UserData") {}
 
-QVariant UserContext::Get(QAnyStringView key) const
+QVariant UserContext::Get(const QString& key) const
 {
     return m_Data.value(key);
 }
 
-void UserContext::Set(QAnyStringView key, const QVariant& value)
+void UserContext::Set(const QString& key, const QVariant& value)
 {
     m_Data.setValue(key, value);
 }

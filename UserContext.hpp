@@ -7,8 +7,8 @@ class UserContext
 public:
     static UserContext& Get();
 
-    QVariant Get(QAnyStringView key) const;
-    void Set(QAnyStringView key, const QVariant& value);
+    QVariant Get(const QString& key) const;
+    void Set(const QString& key, const QVariant& value);
 
     UserContext(UserContext&&) = delete;
     UserContext(const UserContext&) = delete;

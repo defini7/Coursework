@@ -5,6 +5,7 @@
 
 namespace Well
 {
+    // 0'th and the last one are reserved for None and Count
     enum class Model
     {
         None,

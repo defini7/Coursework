@@ -46,11 +46,7 @@ Main::Main() : QMainWindow(nullptr)
     m_DataMenu = new Menu::Data(menuBar());
     menuBar()->addMenu(m_DataMenu);
 
-    QObject::connect(m_ModelMenu, &Menu::Model::OnModelChange, this, [this](Well::Model model)
-        {
-            SetModel(model);
-            emit OnModelChange(model);
-        });
+    QObject::connect(m_ModelMenu, &Menu::Model::OnModelChange, this, &Main::ChangeModel);
 
     QObject::connect(m_DataMenu, &Menu::Data::OnLoadModeSelected, this, [this](Menu::DataLoadMode mode)
         {
@@ -115,6 +111,12 @@ void Main::CreateContextMenu(const Well::Data& data, const QPoint& menuPos)
     menu.exec(menuPos);
 }
 
+void Main::ChangeModel(Well::Model model)
+{
+    SetModel(model);
+    emit OnModelChange(model);
+}
+
 void Main::resizeEvent(QResizeEvent* event)
 {
     QMainWindow::resizeEvent(event);
@@ -133,14 +135,13 @@ void Main::keyPressEvent(QKeyEvent* event)
     auto UpdateModel = [&](int offset)
     {
         int model = UserContext::Get().Get("model").toInt() + offset;
-        if (model < 1) model = 2;
-        if (model > 2) model = 1;
+
+        if (model < 1) model = Well::g_ModelCount - 1;
+        if (model > Well::g_ModelCount) model = 1;
+
         UserContext::Get().Set("model", model);
 
-        Well::Model m = static_cast<Well::Model>(model);
-
-        SetModel(m);
-        emit OnModelChange(m);
+        ChangeModel(static_cast<Well::Model>(model));
     };
 
     switch (event->key())

@@ -55,22 +55,23 @@ void ComputeRanks(QVector<QVector<double>> in, QVector<QVector<double>>& out)
     for (int i = 0; i < in.size(); i++)
     {
         auto values = in[i];
-        int n = values.size();
 
-        QVector<int> indices(n);
+        const int valuesCount = values.size();
+
+        QVector<int> indices(valuesCount);
 
         std::iota(indices.begin(), indices.end(), 0);
         std::sort(indices.begin(), indices.end(), [&](int a, int b) { return values[a] < values[b]; });
 
-        out[i].resize(n);
+        out[i].resize(valuesCount);
 
         int j = 0;
-        while (j < n)
+        while (j < valuesCount)
         {
             double start = j;
             double value = values[indices[j]];
 
-            while (j < n && values[indices[j]] == value)
+            while (j < valuesCount && values[indices[j]] == value)
                 j++;
 
             double rank = (start + 1.0 + j) / 2.0;

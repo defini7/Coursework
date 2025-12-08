@@ -22,15 +22,15 @@ void DataManager::LoadData(Menu::DataLoadMode mode)
         if (file.open(QIODevice::ReadOnly))
         {
             QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
-            QJsonObject json = doc.object();
+            QJsonObject jo = doc.object();
 
-            const QString model = json["model"].toString();
-            const QJsonArray params = json["params"].toArray();
-            const QString username = json["username"].toString();
+            const QString model = jo["model"].toString();
+            const QJsonArray params = jo["params"].toArray();
+            const QString username = jo["username"].toString();
 
             if (params.isEmpty() || model.isEmpty() || username.isEmpty())
             {
-                QMessageBox::critical(nullptr, "Загрузка данных", "Отсутсвует режим, или параметры, или имя пользователя");
+                QMessageBox::critical(nullptr, "Загрузка данных", "Отсутствует режим, или параметры, или имя пользователя");
                 return;
             }
 
@@ -69,18 +69,12 @@ void DataManager::LoadData(Menu::DataLoadMode mode)
                 {
                     for (int j = 0; j < series[i].size(); j++)
                     {
-                        if (i == 0)
-                            m_Data.records[j].bottomPressure = series[i][j];
-                        else if (i == 1)
-                            m_Data.records[j].wellheadTemp = series[i][j];
-                        else if (i == 2)
-                            m_Data.records[j].gasFlow = series[i][j];
-                        else if (i == 3)
-                            m_Data.records[j].depth = series[i][j];
-                        else if (i == 4)
-                            m_Data.records[j].permeability = series[i][j];
-                        else if (i == 5)
-                            m_Data.records[j].porosity = series[i][j];
+                        if      (i == 0) m_Data.records[j].bottomPressure = series[i][j];
+                        else if (i == 1) m_Data.records[j].wellheadTemp = series[i][j];
+                        else if (i == 2) m_Data.records[j].gasFlow = series[i][j];
+                        else if (i == 3) m_Data.records[j].depth = series[i][j];
+                        else if (i == 4) m_Data.records[j].permeability = series[i][j];
+                        else if (i == 5) m_Data.records[j].porosity = series[i][j];
                     }
                 }
                 break;
@@ -89,24 +83,15 @@ void DataManager::LoadData(Menu::DataLoadMode mode)
                 {
                     for (int j = 0; j < series[i].size(); j++)
                     {
-                        if (i == 0)
-                            m_Data.records[j].bottomPressure = series[i][j];
-                        else if (i == 1)
-                            m_Data.records[j].wellheadTemp = series[i][j];
-                        else if (i == 2)
-                            m_Data.records[j].gasFlow = series[i][j];
-                        else if (i == 3)
-                            m_Data.records[j].condensateContent = series[i][j];
-                        else if (i == 4)
-                            m_Data.records[j].depth = series[i][j];
-                        else if (i == 5)
-                            m_Data.records[j].permeability = series[i][j];
-                        else if (i == 6)
-                            m_Data.records[j].porosity = series[i][j];
-                        else if (i == 7)
-                            m_Data.records[j].viscosity = series[i][j];
-                        else if (i == 8)
-                            m_Data.records[j].density = series[i][j];
+                        if      (i == 0) m_Data.records[j].bottomPressure = series[i][j];
+                        else if (i == 1) m_Data.records[j].wellheadTemp = series[i][j];
+                        else if (i == 2) m_Data.records[j].gasFlow = series[i][j];
+                        else if (i == 3) m_Data.records[j].condensateContent = series[i][j];
+                        else if (i == 4) m_Data.records[j].depth = series[i][j];
+                        else if (i == 5) m_Data.records[j].permeability = series[i][j];
+                        else if (i == 6) m_Data.records[j].porosity = series[i][j];
+                        else if (i == 7) m_Data.records[j].viscosity = series[i][j];
+                        else if (i == 8) m_Data.records[j].density = series[i][j];
                     }
                 }
                 break;
@@ -139,6 +124,8 @@ void DataManager::SaveData(const QString& fileName)
     QJsonObject jo;
 
     jo["username"] = UserContext::Get().Get("name").toString();
+
+    // Assume there are only 2 models: gas & condensate
     jo["model"] = m_Data.model == Well::Model::Gas ? "gas" : "condensate";
 
     QJsonArray params;

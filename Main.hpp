@@ -22,6 +22,7 @@ public:
 
 public slots:
     void CreateContextMenu(const Well::Data& data, const QPoint& menuPos);
+    void ChangeModel(Well::Model);
 
 signals:
     void OnLoadModeSelected(Menu::DataLoadMode);
