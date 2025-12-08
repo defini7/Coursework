@@ -12,7 +12,12 @@ DataManager::DataManager()
 void DataManager::LoadData(Menu::DataLoadMode mode)
 {
     if (mode == Menu::DataLoadMode::Raw)
-        m_ParamsDialog.show();
+    {
+        if (m_Data.model == Well::Model::None)
+            QMessageBox::critical(nullptr, "Загрузка данных", "Не выбран режим");
+        else
+            m_ParamsDialog.show();
+    }
     else // Menu::DataLoadMode::File
     {
         QString fileName = QFileDialog::getOpenFileName(&m_ParamsDialog, "Open File", "", "All Files (*)");
@@ -115,6 +120,9 @@ void DataManager::SaveData(const QString& fileName)
         return;
     }
 
+    if (m_Data.records.size() < 30)
+        QMessageBox::warning(nullptr, "Сохранение данных", "Анализ может получиться не точным, так как не хватает данных (рекомендуем 30+ записей)");
+
     QVector<QVector<double>> data;
     ConvertWellDataToSeries(m_Data, data);
 
@@ -190,6 +198,8 @@ void DataManager::SaveData(const QString& fileName)
         for (int j = i + 1; j < paramCount; j++)
         {
             double r = matrix[i][j];
+            if (isnan(r)) continue;
+
             double absR = qAbs(r);
 
             QString p1 = paramHeaders[i];
@@ -206,23 +216,42 @@ void DataManager::SaveData(const QString& fileName)
 
     QFont titleFont("Arial", 20, QFont::Bold);
     painter.setFont(titleFont);
-    painter.drawText(50, y += 80, "📊 Отчет");
+    painter.drawText(50, y += 80, "Отчет");
 
     painter.setFont(QFont("Arial", 14, QFont::Bold));
     painter.drawText(50, y += 400, "Корреляционный анализ скважин");
 
     QFont infoFont("Arial", 12);
     painter.setFont(infoFont);
-    painter.drawText(50, y += 300, QString("👤 Пользователь: %1").arg(UserContext::Get().Get("name").toString()));
+    painter.drawText(50, y += 300, QString("Пользователь: %1").arg(UserContext::Get().Get("name").toString()));
 
     QString modelName = (m_Data.model == Well::Model::Gas) ? "Газовая" : "Газоконденсатная";
-    painter.drawText(50, y += 300, QString("⚙️ Режим: %1").arg(modelName));
+    painter.drawText(50, y += 300, QString("Режим: %1").arg(modelName));
 
-    painter.drawText(50, y += 300, QString("📈 Записей: %1").arg(m_Data.records.size()));
-    painter.drawText(50, y += 300, QString("📊 Параметров: %1").arg(paramCount));
+    painter.drawText(50, y += 300, QString("Записей: %1").arg(m_Data.records.size()));
+    painter.drawText(50, y += 300, QString("Параметров: %1").arg(paramCount));
+
+    QString paramsText = "Параметры: ";
+    const auto paramNames = Well::GetParams(m_Data.model);
+
+    for (int i = 0; i < paramNames.size(); i++)
+    {
+        paramsText += paramNames[i];
+
+        if (i != paramNames.size() - 1)
+            paramsText += "; ";
+
+        if (i != 0 && i % 2 == 0)
+        {
+            painter.drawText(50, y += 300, paramsText);
+            paramsText.clear();
+        }
+    }
+
+    painter.drawText(50, y += 300, paramsText);
 
     painter.setFont(QFont("Arial", 13, QFont::Bold));
-    painter.drawText(50, y += 300, "🔴 Сильные связи");
+    painter.drawText(50, y += 300, "Сильные связи");
 
     painter.setFont(QFont("Arial", 11));
 
@@ -235,7 +264,7 @@ void DataManager::SaveData(const QString& fileName)
         painter.drawText(60, y += 300, "• Отсутствуют");
 
     painter.setFont(QFont("Arial", 13, QFont::Bold));
-    painter.drawText(50, y += 300, "🟡 Умеренные связи");
+    painter.drawText(50, y += 300, "Умеренные связи");
 
     painter.setFont(QFont("Arial", 11));
 
@@ -248,7 +277,7 @@ void DataManager::SaveData(const QString& fileName)
         painter.drawText(60, y += 300, "• Отсутствуют");
 
     painter.setFont(QFont("Arial", 13, QFont::Bold));
-    painter.drawText(50, y += 300, "🟢 Слабые связи");
+    painter.drawText(50, y += 300, "Слабые связи");
 
     painter.setFont(QFont("Arial", 11));
 
@@ -261,7 +290,7 @@ void DataManager::SaveData(const QString& fileName)
         painter.drawText(60, y += 300, "• Отсутствуют");
 
     painter.setFont(QFont("Arial", 13, QFont::Bold));
-    painter.drawText(50, y += 300, "⚪ Нелинейные связи");
+    painter.drawText(50, y += 300, "Нелинейные связи");
 
     painter.setFont(QFont("Arial", 11));
     painter.drawText(60, y += 300, QString("• %1 связей").arg(nonlinear.size()));
