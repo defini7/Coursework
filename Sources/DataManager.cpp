@@ -20,7 +20,7 @@ void DataManager::LoadData(Menu::DataLoadMode mode)
     }
     else // Menu::DataLoadMode::File
     {
-        QString fileName = QFileDialog::getOpenFileName(&m_ParamsDialog, "Open File", "", "All Files (*)");
+        QString fileName = QFileDialog::getOpenFileName(&m_ParamsDialog, "Открыть файл", "", "JSON Files (*.json)");
 
         QFile file(fileName);
 

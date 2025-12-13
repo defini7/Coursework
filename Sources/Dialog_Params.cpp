@@ -55,7 +55,15 @@ namespace Dialog
             auto GetItem = [&](int row, int col)
             {
                 QTableWidgetItem* item = m_Table->item(row, col);
-                return item ? item->text().toDouble() : 0.0;
+                QString text = item->text();
+
+                bool ok;
+                double value = text.toDouble(&ok);
+
+                if (!ok)
+                    QMessageBox::warning(this, "Неправильный ввод", "В ячейку введено не число!");
+
+                return ok ? value : 0.0;
             };
 
             for (int row = 0; row < m_Table->rowCount(); row++)

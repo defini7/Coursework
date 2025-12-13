@@ -28,7 +28,7 @@ namespace Menu
 
         QObject::connect(saveAct, &QAction::triggered, [this]()
         {
-            QString fileName = QFileDialog::getSaveFileName(this, "Сохранить файл", "", "All Files (*.*);;Text Files (*.txt)");
+            QString fileName = QFileDialog::getSaveFileName(this, "Сохранить файл", "", "JSON Files (*.json)");
 
             if (!fileName.isEmpty())
                 emit OnSaveSelected(fileName);
