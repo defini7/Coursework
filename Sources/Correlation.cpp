@@ -1,4 +1,4 @@
-#include "Correlation.hpp"
+#include "Include/Correlation.hpp"
 
 void ConvertWellDataToSeries(const Well::Data& in, QVector<QVector<double>>& out)
 {

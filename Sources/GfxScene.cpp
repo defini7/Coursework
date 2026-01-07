@@ -1,6 +1,6 @@
-#include "GfxScene.hpp"
-#include "UserContext.hpp"
-#include "WellData.hpp"
+#include "Include/GfxScene.hpp"
+#include "Include/UserContext.hpp"
+#include "Include/WellData.hpp"
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsRectItem>

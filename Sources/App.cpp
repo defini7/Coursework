@@ -1,6 +1,6 @@
-#include "Main.hpp"
-#include "DataManager.hpp"
-#include "UserContext.hpp"
+#include "Include/Main.hpp"
+#include "Include/DataManager.hpp"
+#include "Include/UserContext.hpp"
 
 #include <QApplication>
 

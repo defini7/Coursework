@@ -1,4 +1,4 @@
-#include "Dialog_Params.hpp"
+#include "Include/Dialog_Params.hpp"
 
 namespace Dialog
 {

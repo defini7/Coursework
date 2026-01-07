@@ -1,6 +1,6 @@
-#include "Main.hpp"
-#include "UserNameDialog.hpp"
-#include "UserContext.hpp"
+#include "Include/Main.hpp"
+#include "Include/Dialog_UserName.hpp"
+#include "Include/UserContext.hpp"
 
 Main::Main() : QMainWindow(nullptr)
 {
@@ -60,7 +60,7 @@ Main::Main() : QMainWindow(nullptr)
 
     QTimer::singleShot(0, this, [this]()
         {
-           UserNameDialog userNameDialog(this);
+           Dialog::UserName userNameDialog(this);
 
            if (userNameDialog.exec() == QDialog::Accepted)
                SetName(UserContext::Get().Get("name").toString());

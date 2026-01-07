@@ -1,6 +1,6 @@
-#include "DataManager.hpp"
-#include "UserContext.hpp"
-#include "Correlation.hpp"
+#include "Include/DataManager.hpp"
+#include "Include/UserContext.hpp"
+#include "Include/Correlation.hpp"
 
 #include <QtPrintSupport/QtPrintSupport>
 

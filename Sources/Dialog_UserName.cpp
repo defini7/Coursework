@@ -1,7 +1,7 @@
-#include "UserNameDialog.hpp"
-#include "UserContext.hpp"
+#include "Include/Dialog_UserName.hpp"
+#include "Include/UserContext.hpp"
 
-UserNameDialog::UserNameDialog(QWidget* parent) : QDialog(parent)
+Dialog::UserName::UserName(QWidget* parent) : QDialog(parent)
 {
     setWindowTitle("Имя пользователя");
     resize(100, 70);
